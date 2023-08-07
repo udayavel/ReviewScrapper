@@ -34,10 +34,16 @@ def index():
 
             filename = searchString + ".csv"
             fw = open(filename, "w")
-            headers = "Product, Customer Name, Rating, Heading, Comment \n"
+            headers = "Price Product, Customer Name, Rating, Heading, Comment \n"
             fw.write(headers)
             reviews = []
             for commentbox in commentboxes:
+                try:
+
+                    price = prod_html.find_all("div", {"class": "_30jeq3"})[0].text
+
+                except:
+                    price = 'No Price'
                 try:
                     #name.encode(encoding='utf-8')
                     name = commentbox.div.div.find_all('p', {'class': '_2sc7ZR _2V5EHH'})[0].text
@@ -67,7 +73,7 @@ def index():
                     print("Exception while creating dictionary: ",e)
 
                 mydict = {"Product": searchString, "Name": name, "Rating": rating, "CommentHead": commentHead,
-                          "Comment": custComment}
+                          "Comment": custComment,"Price":price}
                 reviews.append(mydict)
             return render_template('results.html', reviews=reviews[0:(len(reviews)-1)])
         except Exception as e:
